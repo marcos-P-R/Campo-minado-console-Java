@@ -47,7 +47,7 @@ public class Campo {
 	}
 
 	
-	boolean abrir() {
+	public boolean abrir() {
 		if (!aberto && !marcado) {
 			aberto = true;
 			if (minado) {
@@ -67,6 +67,10 @@ public class Campo {
 
 	boolean vizinhacaSegura() {
 		return vizinhos.stream().noneMatch(v -> v.minado);
+	}
+	
+	public void minar() {
+		minado = true;
 	}
 	
 	public boolean isMarcado () {
