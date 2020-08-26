@@ -2,6 +2,7 @@ package org.devMarcos.modelos;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.devMarcos.excecao.ExplosaoExcepction;
 import org.devMarcos.modelo.Campo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,10 +81,52 @@ public class CampoTest {
 	}
 	
 	@Test
-	void testAbrirNaoMinadoMaarcado () {
+	void testAbrirNaoMinadoMarcado () {
 		campo.alternarMarcacao();
-		assertTrue(campo.abrir());
+		assertFalse(campo.abrir());
 	}
 	
+	@Test
+	void testAbrirMinadoMarcado () {
+		campo.alternarMarcacao();
+		campo.minar();
+		assertFalse(campo.abrir());
+	}
+	
+	@Test
+	void testAbrirMinadoNaoMarcado () {
+		campo.minar();
+		assertThrows(ExplosaoExcepction.class, () -> {
+			campo.abrir();
+		});
+	}
+	
+	@Test
+	void testAbrirComVizinhos1 () {
+		Campo campo11 = new Campo(1, 1);
+		Campo campo22 = new Campo(2, 2);
+		
+		campo22.adicionarVizinho(campo11);
+		campo.adicionarVizinho(campo22);
+		campo.abrir();
+		
+		assertTrue(campo22.isAberto() && campo11.isAberto());
+	}
+	
+	@Test
+	void testAbrirComVizinhos2 () {
+		Campo campo11 = new Campo(1, 1);
+		Campo campo12 = new Campo(1, 2);
+		campo12.minar();
+		
+		Campo campo22 = new Campo(2, 2);
+		campo22.adicionarVizinho(campo11);
+		campo22.adicionarVizinho(campo12);
+		
+		campo.adicionarVizinho(campo22);
+		campo.abrir();
+		
+		assertTrue(campo22.isAberto() && campo11.isFechado());
+	}
 	
 }
